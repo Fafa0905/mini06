@@ -1,0 +1,44 @@
+Token: ls, Type: 0
+Token: out, Type: 2
+Processus enfant lancé !
+freeshell
+la ligne est = ls
+le i est 0
+Tentative d'exécution : ls
+[?2004hChemin complet testé : /usr/local/bin/ls
+user:Tentative d'exécution : ls
+Chemin complet testé : /usr/sbin/ls
+Tentative d'exécution : ls
+Chemin complet testé : /usr/bin/ls
+Makefile
+README.md
+builds_in.c
+builds_in.o
+cahier des charges.txt
+env_management.c
+env_management.o
+env_management.zip
+exe.c
+exe.o
+free_shell.c
+free_shell.o
+libft
+main.c
+main.o
+mini
+minishell.h
+obj
+out
+parsing.c
+parsing.o
+parsing_2.c
+parsing_2.o
+rep.c
+tshits
+utils_parsing.c
+utils_parsing.o
+utils_parsing_2.c
+utils_parsing_2.o
+v1.c
+valgrind-readline.supp
+^C[?2004l
