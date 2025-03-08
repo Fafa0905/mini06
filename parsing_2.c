@@ -78,13 +78,11 @@ int	parse_token(t_commandlist *mini)
 {
 	t_token		*current_token;
 	t_command	*current;
-	t_command	*temp;
-	t_command	*last; // Pour garder une référence au dernier élément ajouté
+	t_command	*last;
 
 	current_token = mini->tokens;
 	current = NULL;
-	last = NULL; // Initialisation du dernier élément
-	(void)temp;
+	last = NULL;
 
 	while (current_token)
 	{
@@ -93,30 +91,24 @@ int	parse_token(t_commandlist *mini)
 
 		if (current_token->type == TOKEN_PIPE)
 		{
-			if (current && current->args)
+			if (current)
 			{
 				if (!mini->cmd)
-				{
 					mini->cmd = current;
-				}
 				else
 				{
 					last->next = current;
-					current->prev = last; // Ajout du chaînage arrière
+					current->prev = last;
 				}
-				last = current; // Mise à jour du dernier élément
+				last = current;
 			}
 			current = NULL;
 		}
 		else
-		{
 			add_token_cmd(current, current_token->type, current_token->value);
-		}
 
 		current_token = current_token->next;
 	}
-
-	// Ajouter la dernière commande si elle existe
 	if (current && current->args)
 	{
 		if (!mini->cmd)
@@ -124,9 +116,8 @@ int	parse_token(t_commandlist *mini)
 		else
 		{
 			last->next = current;
-			current->prev = last; // Ajout du chaînage arrière
+			current->prev = last;
 		}
 	}
-
 	return (0);
 }
