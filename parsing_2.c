@@ -74,59 +74,54 @@ void	add_token_cmd(t_command *current, t_token_type token_type, char *str)
 	else if (token_type == TOKEN_HEREDOC)
 		add_arg(&current->heredoc, str);
 }
+
 int	parse_token(t_commandlist *mini)
 {
 	t_token		*current_token;
 	t_command	*current;
 	t_command	*temp;
-	t_command	*last; // Pour garder une référence au dernier élément ajouté
 
 	current_token = mini->tokens;
 	current = NULL;
-	last = NULL; // Initialisation du dernier élément
-	(void)temp;
-
 	while (current_token)
 	{
 		if (!current)
 			current = init_command();
-
 		if (current_token->type == TOKEN_PIPE)
 		{
-			if (current && current->args)
+			if (current)
 			{
 				if (!mini->cmd)
-				{
 					mini->cmd = current;
-				}
 				else
 				{
-					last->next = current;
-					current->prev = last; // Ajout du chaînage arrière
+					temp = mini->cmd;
+					while (temp->next)
+						temp = temp->next;
+					temp->next = current;
+					current->prev = temp;
+					printf("Ajout d'une commande à la liste -> Adresse : %p (prev: %p)\n", (void *)current, (void *)current->prev);
 				}
-				last = current; // Mise à jour du dernier élément
 			}
 			current = NULL;
 		}
 		else
-		{
 			add_token_cmd(current, current_token->type, current_token->value);
-		}
-
 		current_token = current_token->next;
 	}
-
-	// Ajouter la dernière commande si elle existe
-	if (current && current->args)
+	if (current)
 	{
 		if (!mini->cmd)
 			mini->cmd = current;
 		else
 		{
-			last->next = current;
-			current->prev = last; // Ajout du chaînage arrière
+			temp = mini->cmd;
+			while (temp->next)
+				temp = temp->next;
+			temp->next = current;
+			current->prev = temp;
+			printf("Dernière commande ajoutée -> Adresse : %p\n (prev: %p)\n", (void *)current, (void *)current->prev);
 		}
 	}
-
 	return (0);
 }
