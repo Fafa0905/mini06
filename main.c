@@ -12,6 +12,8 @@
 
 #include "minishell.h"
 
+volatile sig_atomic_t g_signal = 0;
+
 t_commandlist	*init_shell(void)
 {
 	t_commandlist	*mini;
@@ -23,6 +25,20 @@ t_commandlist	*init_shell(void)
 	mini->cmd = NULL;
 	mini->res = 0;
 	return (mini);
+}
+
+void	signal_handler(int sig)
+{
+	if (sig == SIGINT)
+	{
+		g_signal = SIGINT;
+		write(1, "\n", 1);
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();
+	}
+	else if (sig == SIGQUIT)
+		signal(SIGQUIT, SIG_IGN);
 }
 
 int	main(int ac, char **argv, char **env)
@@ -37,13 +53,17 @@ int	main(int ac, char **argv, char **env)
 	if (!mini)
 		return (printf("Error allocating memory\n"), 1);
 	set_env(mini, env);
+	signal(SIGQUIT, signal_handler);
+	signal(SIGINT, signal_handler);
 	while (1)
 	{
 		input = readline("user:");
 		if (!input)
+			break;
+		if (g_signal == SIGINT)
 		{
-			free(input);
-			return (1);
+			g_signal = 0;
+			continue;
 		}
 		if (*input)
 			add_history(input);
@@ -51,12 +71,15 @@ int	main(int ac, char **argv, char **env)
 		{
 			i = mini->res;
 			free(input);
+			free_shell(mini);
 			continue;
 		}
 		free(input);
 		free_shell(mini);
 	}
+	free_shell(mini);
 	free(mini);
 	rl_clear_history();
+	printf("exit\n");
 	return (i);
 }
