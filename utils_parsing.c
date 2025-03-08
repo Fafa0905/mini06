@@ -12,6 +12,49 @@
 
 #include "minishell.h"
 
+int	checking_syntax(char *input)
+{
+	int		i;
+	char	temp;
+	
+	i = 0;
+	if (input[i] == '|' || (input[i] == '<' && input[i + 1] != '<') || input[i] == '>')
+	{
+		printf("Syntax error near unexpected token \n");
+		return (1);
+	}
+	while (input[i])
+	{
+		if (input[i] == '>' || input[i] == '<')
+		{
+			temp = input[i];
+			i++;
+			if (input[i] == temp)
+				i++;
+			while (isspace(input[i]))
+				i++;
+			if (input[i] == '\0' || input[i] == '>' || input[i] == '<' || input[i] == '|')
+			{
+				printf("Syntax error near unexpected token \n");
+				return (1);
+			}
+		}
+		if (input[i] == '|')
+		{
+			i++;
+			while (isspace(input[i]))
+				i++;
+			if (input[i] == '\0' || input[i] == '>' || input[i] == '<' || input[i] == '|')
+			{
+				printf("Syntax error near unexpected token \n");
+				return (1);
+			}
+		}
+		i++;
+	}
+	return (0);
+}
+
 int ispace(char c)
 {
 	if (c == ' ' || c == '\n' || c == '\r' || c == '\f' || c == '\t' \
