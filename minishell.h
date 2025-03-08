@@ -23,6 +23,8 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
+extern volatile sig_atomic_t g_signal;
+
 typedef struct s_lst
 {
     char *line;
@@ -93,6 +95,7 @@ int	    open_quote(char *input);
 char    *ft_strndup(const char *s, size_t n);
 
 //utils_parsing_2
+int	    checking_syntax(char *input);
 int	    checking_error_before(char *input);
 int	    add_token(t_commandlist *mini, t_token_type type, char *token_value);
 void    handle_double_redirect(char *input, int *i, t_commandlist *mini, t_token_type token_type);
